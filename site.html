@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brawl Stars Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-image: url('bg.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #ffffff; 
+            margin-top: 10%; 
+            font-weight: 800;
+        }
+
+        button {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: #ffffff; 
+            font-weight: 700;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; 
+        }
+
+        button:hover {
+            background-color: #45a049; 
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>Brawl Stars Adventure</h1>
+    <button onclick="startAdventure()">Start Adventure</button>
+
+    <script>
+        let dynamike = {
+            name: "Dynamike",
+            maxHealth: 5300,
+            health: 5300,
+            damage: 2800
+        };
+
+        let shelly = {
+            name: "Shelly",
+            maxHealth: 4800,
+            health: 4800,
+            damage: 2900
+        };
+
+        let colt = {
+            name: "Colt",
+            maxHealth: 3900,
+            health: 3900,
+            damage: 2400
+        };
+
+        function startAdventure() {
+            name = getPlayerName()
+            alert(`Welcome, ${name}, to Brawl Stars Adventure!`);
+            let characterChoice = prompt("Choose your fighter: Dynamike, Shelly, or Colt?").toLowerCase();
+            let playerCharacter;
+            switch (characterChoice) {
+                case "dynamike":
+                    playerCharacter = dynamike;
+                    break;
+                case "shelly":
+                    playerCharacter = shelly;
+                    break;
+                case "colt":
+                    playerCharacter = colt;
+                    break;
+                default:
+                    alert("Invalid character choice. Please try again.");
+                    startAdventure(); 
+            }
+
+            playerCharacter.currentHealth = playerCharacter.maxHealth;
+            battleMortis(playerCharacter);
+        }
+
+        function getPlayerName() {
+            let playerName = prompt("What's your name, adventurer?");
+            return playerName;
+        }
+
+        function battleMortis(player) {
+            let decision = prompt("You see a power-up box. Choose: 'break' or 'go' to the neighboring character?").toLowerCase();
+
+            if (decision === "break") {
+                player.damage += 360; 
+                player.maxHealth += 1200;
+                player.currentHealth = player.maxHealth;
+                encounter(player); 
+            } else if (decision === "go") {
+                let playerHealth = player.currentHealth;
+                let playerDamage = player.damage;
+                let enemyDamage = 2100; 
+                let enemyHealth = 5500;
+
+                for (let i = 0; i < 3; i++) {
+                    playerHealth -= enemyDamage;
+                    if (playerHealth < 0) {
+                        playerHealth = 0; 
+                    }
+                    console.log(`Mortis deals ${enemyDamage} damage. Your health: ${playerHealth}.`);
+
+                    if (playerHealth === 0) {
+                        alert("Mortis attacks you and wins the battle.You are 9 in the leaderboard. Game over!");
+                        return;
+                    }
+                }
+
+                encounter(player);
+            }
+        }
+
+        function encounter(player) {
+            let decision = prompt("You see a duel between Jessie and Brock. 'Join' the fight or 'stay' in the bushes?").toLowerCase();
+
+            if (decision === "join") {
+                alert(`Brock uses his ultimate and deals 7000 damage to you.You are 6 in the leaderboard. Game over!`);
+                return;
+            } else if (decision === "stay") {
+                let brockHealth = 1400; 
+                let brockDamage = 1500; 
+
+                while (player.currentHealth > 0 && brockHealth > 0) {
+                    brockHealth -= player.damage;
+                    console.log(`You attack Brock and deal ${player.damage} damage. Brock's health: ${brockHealth > 0 ? brockHealth : 0}.`);
+
+                    if (brockHealth <= 0) {
+                        alert("You manage to finish him off when he was weak.");
+                        alert("You defeat Brock in a mini-fight!");
+                        player.currentHealth += 1600;
+                        if (player.currentHealth > player.maxHealth) {
+                            player.currentHealth = player.maxHealth;
+                        }
+                        player.damage += 360;
+                        finalEncounter(player); 
+                    }
+                    if (player.currentHealth <= 0) {
+                        alert("Brock defeats you in a mini-fight.You are 5 in the leaderboard. Game over!");
+                        return;
+                    }
+                }
+            }
+        }
+
+        function finalEncounter(player) {
+            let decision = confirm("You see El Primo, the last survivor. Engage in battle?");
+
+            if (decision) {
+                let playerHealth = player.currentHealth;
+                let playerDamage = player.damage;
+                let enemyDamage = 2800;
+                let enemyHealth = 9200;
+
+                let attackPrompt = () => {
+                    let ok = confirm("Press OK to deal damage to El Primo.");
+                    if (ok) {
+                        enemyHealth -= playerDamage;
+                        console.log(`You deal ${playerDamage} damage to El Primo. El Primo's health: ${enemyHealth > 0 ? enemyHealth : 0}.`);
+
+                        if (enemyHealth <= 0) {
+                            alert("You defeat El Primo in a dynamic battle! You are 1 in the leaderboard");
+                            return;
+                        }
+
+                        playerHealth -= enemyDamage;
+                        if (playerHealth < 0) {
+                            playerHealth = 0;
+                        }
+                        console.log(`El Primo deals ${enemyDamage} damage to you. Your health: ${playerHealth > 0 ? playerHealth : 0}.`);
+
+                        if (playerHealth === 0) {
+                            alert("El Primo defeats you in a dynamic battle. Game over!");
+                            return;
+                        }
+
+                        attackPrompt(); 
+                    } else {
+                        alert("El Primo used his ultimate and eliminated you. You are 2 in the leaderboard. Game over!");
+                    }
+                };
+
+                attackPrompt(); 
+            } else {
+                alert("El Primo used his ultimate and eliminated you. You are 2 in the leaderboard Game over!");
+            }
+        }
+
+    </script>
+</body>
+</html>
